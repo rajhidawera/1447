@@ -10,7 +10,6 @@ export interface MosqueRecord {
   تاريخ_هجري: string;
   عدد_المصلين_رجال: number | string;
   عدد_المصلين_نساء: number | string;
-  عدد_وجبات_افطار_المدعومة: number | string;
   عدد_وجبات_الافطار_فعلي: number | string;
   عدد_كراتين_ماء: number | string;
   عدد_مستفيدي_الضيافة: number | string;
@@ -40,6 +39,7 @@ export interface MaintenanceRecord {
   record_id: string;
   mosque_code?: string;
   المسجد?: string;
+  "نوع الموقع"?: string;
   اليوم: string;
   التاريخ: string;
   أعمال_النظافة_عدد: number | string;
@@ -53,6 +53,48 @@ export interface MaintenanceRecord {
   created_at?: string;
   الاعتماد?: string;
 }
+
+export interface FastEvalRecord {
+  record_id: string;
+  الاسم_الكريم: string;
+  mosque_code: string;
+  المسجد: string;
+  "نوع الموقع": string;
+  حرارة_الوجبة: number | string;
+  الرز: number | string;
+  الدجاج: number | string;
+  السمبوسة: number | string;
+  الشوربة: number | string;
+  تنوع_أصناف_الوجبة: number | string;
+  التغليف: number | string;
+  النقل_والتعبئة: number | string;
+  الالتزام_في_الوقت: number | string;
+  التوصية_بتكرار_التعامل_في_الأعوام_القادمة: number | string;
+  ملاحظات_عامة: string;
+  created_at?: string;
+}
+
+export interface VisitRecord {
+  رقم_السجل: string;
+  الاسم_الكريم: string;
+  اليوم: string;
+  mosque_code: string;
+  المسجد: string;
+  "نوع الموقع": string;
+  حرارة_الوجبة: number | string;
+  الرز: number | string;
+  الدجاج: number | string;
+  السمبوسة: number | string;
+  الشوربة: number | string;
+  تنوع_أصناف_الوجبة: number | string;
+  التغليف: number | string;
+  النقل_والتعبئة: number | string;
+  الالتزام_في_الوقت: number | string;
+  التوصية_بتكرار_التعامل_في_الأعوام_القادمة: number | string;
+  ملاحظات_عامة_على_الوجبة_المقدمة_أو_أصنافها: string;
+  created_at?: string;
+}
+
 
 export interface PhotoRecord {
   public_id: string;
@@ -84,5 +126,7 @@ export interface ApiResponse {
     Dayd: DayInfo[];
     Maintenance_Report: MaintenanceRecord[];
     photo: PhotoRecord[];
+    Fast_eval: FastEvalRecord[];
+    Visit: VisitRecord[];
   };
 }

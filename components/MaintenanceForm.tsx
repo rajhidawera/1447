@@ -46,7 +46,12 @@ const MaintenanceForm: React.FC<any> = ({ initialData, mosques, days, isAdmin, o
     const code = e.target.value;
     setSelectedMosqueCode(code);
     const mosque = mosques.find(m => m.mosque_code === code);
-    setFormData(prev => ({ ...prev, mosque_code: code, المسجد: mosque?.المسجد || '' }));
+    setFormData(prev => ({ 
+      ...prev, 
+      mosque_code: code, 
+      المسجد: mosque?.المسجد || '',
+      "نوع الموقع": mosque?.["نوع الموقع"] || ''
+    }));
     setEnteredPassword('');
   };
 

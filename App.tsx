@@ -1,21 +1,27 @@
 
 import React, { useState, useEffect } from 'react';
 import { mosqueApi } from './services/api.ts';
-import { MosqueRecord, MaintenanceRecord, PhotoRecord, MosqueInfo, DayInfo } from './types.ts';
+import { MosqueRecord, MaintenanceRecord, PhotoRecord, MosqueInfo, DayInfo, FastEvalRecord, VisitRecord } from './types.ts';
 import RecordList from './components/RecordList.tsx';
 import RecordForm from './components/RecordForm.tsx';
 import MaintenanceForm from './components/MaintenanceForm.tsx';
 import MaintenanceDashboard from './components/MaintenanceDashboard.tsx';
 import Dashboard from './components/Dashboard.tsx';
 import WelcomePage from './components/WelcomePage.tsx';
+import FastEvalForm from './components/FastEvalForm.tsx';
+import FastEvalResults from './components/FastEvalResults.tsx';
+import VisitForm from './components/VisitForm.tsx';
+import VisitResults from './components/VisitResults.tsx';
 
-type ViewState = 'dashboard' | 'list' | 'form' | 'maintenance' | 'maintenance_list';
+type ViewState = 'dashboard' | 'list' | 'form' | 'maintenance' | 'maintenance_list' | 'fast_eval' | 'fast_eval_results' | 'visit' | 'visit_results';
 
 const App: React.FC = () => {
   const [isPlatformEntered, setIsPlatformEntered] = useState(false);
   const [view, setView] = useState<ViewState>('dashboard');
   const [records, setRecords] = useState<MosqueRecord[]>([]);
   const [maintenanceRecords, setMaintenanceRecords] = useState<MaintenanceRecord[]>([]);
+  const [fastEvalRecords, setFastEvalRecords] = useState<FastEvalRecord[]>([]);
+  const [visitRecords, setVisitRecords] = useState<VisitRecord[]>([]);
   const [photosList, setPhotosList] = useState<PhotoRecord[]>([]);
   const [mosquesList, setMosquesList] = useState<MosqueInfo[]>([]);
   const [daysList, setDaysList] = useState<DayInfo[]>([]);
@@ -36,6 +42,8 @@ const App: React.FC = () => {
         setPhotosList(response.sheets.photo || []);
         setMosquesList(response.sheets.mosque || []);
         setDaysList(response.sheets.Dayd || []);
+        setFastEvalRecords(response.sheets.Fast_eval || []);
+        setVisitRecords(response.sheets.Visit || []);
       }
     } catch (error) {
       showNotification('خطأ في تحميل البيانات', 'error');
@@ -69,7 +77,13 @@ const App: React.FC = () => {
   const handleSave = async (data: any) => {
     setLoading(true);
     try {
-      const payload = isAdmin ? data : { ...data, الاعتماد: 'قيد المراجعة' };
+      let payload = { ...data };
+      // Only add 'الاعتماد' for specific sheets if the user is not an admin.
+      // Other sheets like 'Visit' and 'Fast_eval' do not have this field.
+      if (!isAdmin && (data.sheet === 'daily_mosque_report' || data.sheet === 'Maintenance_Report')) {
+        payload.الاعتماد = 'قيد المراجعة';
+      }
+
       const result = await mosqueApi.save(payload);
       if (result.success) {
         showNotification('تم المزامنة بنجاح', 'success');
@@ -77,10 +91,11 @@ const App: React.FC = () => {
         setEditingRecord(null);
         setTimeout(async () => { await fetchData(); }, 1500);
       } else {
-        throw new Error('API return success: false');
+        throw new Error('API returned success: false');
       }
     } catch (error) {
       showNotification('فشل في الاتصال بالقاعدة أو تحديث الحالة', 'error');
+      console.error("Save error:", error);
     } finally {
       setLoading(false);
     }
@@ -139,6 +154,22 @@ const App: React.FC = () => {
           <nav className="flex items-center bg-white/10 rounded-2xl p-1 gap-1 border border-white/5">
             <button onClick={() => setView('dashboard')} className={`px-4 sm:px-6 py-2 rounded-xl text-sm font-bold transition-all ${view === 'dashboard' ? 'bg-[#0054A6] text-white shadow-lg' : 'text-white/60 hover:text-white hover:bg-white/5'}`}>الرئيسية</button>
             <button onClick={() => setView('list')} className={`px-4 sm:px-6 py-2 rounded-xl text-sm font-bold transition-all ${view === 'list' ? 'bg-[#0054A6] text-white shadow-lg' : 'text-white/60 hover:text-white hover:bg-white/5'}`}>السجلات</button>
+            {isAdmin && (
+              <>
+                <button 
+                  onClick={() => setView('fast_eval_results')} 
+                  className={`px-4 sm:px-6 py-2 rounded-xl text-sm font-bold transition-all ${view === 'fast_eval_results' ? 'bg-[#C5A059] text-white shadow-lg' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+                >
+                  تقييم الوجبات
+                </button>
+                <button 
+                  onClick={() => setView('visit_results')} 
+                  className={`px-4 sm:px-6 py-2 rounded-xl text-sm font-bold transition-all ${view === 'visit_results' ? 'bg-[#C5A059] text-white shadow-lg' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+                >
+                  تقارير الزيارة
+                </button>
+              </>
+            )}
             {!isAdmin ? (
                <button onClick={() => setShowAdminModal(true)} className="px-4 py-2 text-xs font-black bg-[#C5A059] text-[#003366] rounded-xl hover:scale-105 transition-all mr-2">دخول المسؤول</button>
             ) : (
@@ -176,6 +207,8 @@ const App: React.FC = () => {
             onNavigateToRecords={() => setView('list')} 
             onNavigateToAdd={() => setView('form')}
             onNavigateToMaintenance={() => setView('maintenance_list')}
+            onNavigateToFastEval={() => { setEditingRecord(null); setView('fast_eval'); }}
+            onNavigateToVisit={() => { setEditingRecord(null); setView('visit'); }}
           />
         )}
         {view === 'list' && (
@@ -213,6 +246,35 @@ const App: React.FC = () => {
             onEdit={(r) => {setEditingRecord(r); setView('maintenance');}}
             onBack={() => setView('dashboard')}
             onAddNew={() => {setEditingRecord(null); setView('maintenance');}}
+          />
+        )}
+        {view === 'fast_eval' && (
+          <FastEvalForm
+            mosques={mosquesList}
+            onSave={handleSave}
+            onCancel={handleCancel}
+          />
+        )}
+        {view === 'fast_eval_results' && (
+          <FastEvalResults
+            records={fastEvalRecords}
+            mosques={mosquesList}
+            onBack={() => setView('dashboard')}
+          />
+        )}
+        {view === 'visit' && (
+          <VisitForm
+            mosques={mosquesList}
+            days={daysList}
+            onSave={handleSave}
+            onCancel={handleCancel}
+          />
+        )}
+        {view === 'visit_results' && (
+          <VisitResults
+            records={visitRecords}
+            mosques={mosquesList}
+            onBack={() => setView('dashboard')}
           />
         )}
       </main>

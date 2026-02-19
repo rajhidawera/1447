@@ -23,8 +23,8 @@ const MaintenanceDashboard: React.FC<MaintenanceDashboardProps> = ({ records, is
   const [searchTerm, setSearchTerm] = useState('');
 
   const filtered = records.filter(r => 
-    r.المسجد?.toLowerCase().includes(searchTerm.toLowerCase())
-  ).sort((a, b) => new Date(b.created_at || '').getTime() - new Date(a.created_at || '').getTime());
+    (r.المسجد || '').toLowerCase().includes(searchTerm.toLowerCase())
+  ).sort((a, b) => new Date(b.created_at || b.التاريخ || 0).getTime() - new Date(a.created_at || a.التاريخ || 0).getTime());
 
   return (
     <div className="space-y-8 animate-in fade-in">
@@ -59,9 +59,9 @@ const MaintenanceDashboard: React.FC<MaintenanceDashboardProps> = ({ records, is
               </tr>
             </thead>
             <tbody>
-              {filtered.map((r, i) => (
-                <tr key={i} className="hover:bg-slate-50/50 transition-colors">
-                  <td className="px-4 py-5 font-bold text-[#003366]">{r.المسجد}</td>
+              {filtered.length > 0 ? filtered.map((r, i) => (
+                <tr key={r.record_id || i} className="hover:bg-slate-50/50 transition-colors">
+                  <td className="px-4 py-5 font-bold text-[#003366]">{r.المسجد || 'غير محدد'}</td>
                   <td className="px-4 py-5 font-black text-slate-600 tabular-nums">{r.أعمال_الصيانة_عدد || 0}</td>
                   <td className="px-4 py-5 font-black text-slate-600 tabular-nums">{r.أعمال_النظافة_عدد || 0}</td>
                   <td className="px-4 py-5">
@@ -76,7 +76,14 @@ const MaintenanceDashboard: React.FC<MaintenanceDashboardProps> = ({ records, is
                     </button>
                   </td>
                 </tr>
-              ))}
+              )) : (
+                <tr>
+                  <td colSpan={5} className="text-center py-16 text-slate-400 font-bold">
+                     <div className="text-3xl mb-2">🤷‍♂️</div>
+                     لا توجد سجلات صيانة لعرضها حالياً.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

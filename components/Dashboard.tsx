@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { MosqueRecord, MosqueInfo, DayInfo, PhotoRecord } from '../types.ts';
 import ImageSlider from './ImageSlider.tsx';
@@ -11,9 +12,11 @@ interface DashboardProps {
   onNavigateToRecords: () => void;
   onNavigateToAdd: () => void;
   onNavigateToMaintenance: () => void;
+  onNavigateToFastEval: () => void;
+  onNavigateToVisit: () => void;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ records, mosques, days, photos, onNavigateToRecords, onNavigateToAdd, onNavigateToMaintenance }) => {
+const Dashboard: React.FC<DashboardProps> = ({ records, mosques, days, photos, onNavigateToRecords, onNavigateToAdd, onNavigateToMaintenance, onNavigateToFastEval, onNavigateToVisit }) => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [aiInsight, setAiInsight] = useState<string | null>(null);
 
@@ -106,6 +109,22 @@ const Dashboard: React.FC<DashboardProps> = ({ records, mosques, days, photos, o
           <div>
             <h3 className="text-2xl font-black text-[#003366]">لوحة الصيانة والنظافة</h3>
             <p className="text-slate-500 text-sm mt-2">متابعة النظافة، الصيانة واللوجستيات</p>
+          </div>
+        </button>
+
+        <button onClick={onNavigateToFastEval} className="group bg-[#C5A059] text-white p-10 rounded-[3rem] shadow-2xl shadow-[#C5A059]/20 flex flex-col items-center text-center gap-6 transition-all hover:translate-y-[-4px] active:scale-95 border-b-8 border-[#ad8949]">
+          <div className="w-20 h-20 bg-white/20 rounded-[2rem] flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">🍲</div>
+          <div>
+            <h3 className="text-2xl font-black text-white">تقييم وجبات الإفطار</h3>
+            <p className="text-white/60 text-sm mt-2">تقييم جودة الوجبات والموردين</p>
+          </div>
+        </button>
+
+        <button onClick={onNavigateToVisit} className="group bg-white text-[#003366] p-10 rounded-[3rem] shadow-xl border-2 border-slate-100 flex flex-col items-center text-center gap-6 transition-all hover:translate-y-[-4px] active:scale-95 border-b-8 border-slate-200">
+          <div className="w-20 h-20 bg-[#003366]/5 rounded-[2rem] flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">📋</div>
+          <div>
+            <h3 className="text-2xl font-black text-[#003366]">نموذج زيارة ميدانية</h3>
+            <p className="text-slate-500 text-sm mt-2">تسجيل تفاصيل الزيارات وتقييم الوجبات</p>
           </div>
         </button>
       </div>

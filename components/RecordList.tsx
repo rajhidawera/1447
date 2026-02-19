@@ -23,8 +23,8 @@ const RecordList: React.FC<RecordListProps> = ({ records, isAdmin, onEdit, onAdd
   const [searchTerm, setSearchTerm] = useState('');
 
   const filteredRecords = records.filter(r => 
-    r.المسجد?.toLowerCase().includes(searchTerm.toLowerCase()) || 
-    r.label_day?.toLowerCase().includes(searchTerm.toLowerCase())
+    (r.المسجد || '').toLowerCase().includes(searchTerm.toLowerCase()) || 
+    (r.label_day || '').toLowerCase().includes(searchTerm.toLowerCase())
   ).sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
   return (
