@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { MosqueRecord, MosqueInfo, DayInfo } from '../types.ts';
 import { INITIAL_RECORD } from '../constants.ts';
@@ -165,11 +164,7 @@ const RecordForm: React.FC<any> = ({ initialData, mosques, days, isAdmin, onSave
               </>
             )}
             <div className="flex flex-col gap-2">
-              <label className="text-[10px] font-black text-slate-400 mr-2 uppercase tracking-widest">وجبات إفطار (مدعومة)</label>
-              <input type="text" inputMode="numeric" name="عدد_وجبات_افطار_المدعومة" value={formData.عدد_وجبات_افطار_المدعومة} onChange={handleChange} placeholder="0" className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0054A6]" />
-            </div>
-            <div className="flex flex-col gap-2">
-              <label className="text-[10px] font-black text-slate-400 mr-2 uppercase tracking-widest">وجبات إفطار (فعلي)</label>
+              <label className="text-[10px] font-black text-slate-400 mr-2 uppercase tracking-widest">وجبات الإفطار</label>
               <input type="text" inputMode="numeric" name="عدد_وجبات_الافطار_فعلي" value={formData.عدد_وجبات_الافطار_فعلي} onChange={handleChange} placeholder="0" className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0054A6]" />
             </div>
             <div className="flex flex-col gap-2">

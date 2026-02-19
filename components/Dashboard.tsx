@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { MosqueRecord, MosqueInfo, DayInfo, PhotoRecord } from '../types.ts';
 import ImageSlider from './ImageSlider.tsx';
@@ -19,7 +18,7 @@ const Dashboard: React.FC<DashboardProps> = ({ records, mosques, days, photos, o
   const [aiInsight, setAiInsight] = useState<string | null>(null);
 
   const totalWorshippers = records.reduce((sum, r) => sum + (Number(r.عدد_المصلين_رجال) || 0) + (Number(r.عدد_المصلين_نساء) || 0), 0);
-  const totalIftarMeals = records.reduce((sum, r) => sum + (Number(r.عدد_وجبات_افطار_المدعومة) || 0), 0);
+  const totalIftarMeals = records.reduce((sum, r) => sum + (Number(r.عدد_وجبات_الافطار_فعلي) || 0), 0);
   const totalStudents = records.reduce((sum, r) => sum + (Number(r.عدد_طلاب_الحلقات) || 0) + (Number(r.عدد_طالبات_الحلقات) || 0), 0);
 
   const handleAiAnalysis = async () => {

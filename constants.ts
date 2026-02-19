@@ -1,4 +1,3 @@
-
 export const API_ENDPOINT = 'https://script.google.com/macros/s/AKfycbx9gySu7jNy1Qt6EUDaaLlXfMzndfW9qU8cz6BrXx5_RUVtCOej6ge70KTpk7Mv5ivlyw/exec';
 
 export const INITIAL_RECORD: any = {
@@ -12,7 +11,6 @@ export const INITIAL_RECORD: any = {
   تاريخ_هجري: '',
   عدد_المصلين_رجال: '',
   عدد_المصلين_نساء: '',
-  عدد_وجبات_افطار_المدعومة: '',
   عدد_وجبات_الافطار_فعلي: '',
   عدد_كراتين_ماء: '',
   عدد_مستفيدي_الضيافة: '',
