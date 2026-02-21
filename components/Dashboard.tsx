@@ -20,9 +20,20 @@ const Dashboard: React.FC<DashboardProps> = ({ records, mosques, days, photos, o
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [aiInsight, setAiInsight] = useState<string | null>(null);
 
-  const totalWorshippers = records.reduce((sum, r) => sum + (Number(r.عدد_المصلين_رجال) || 0) + (Number(r.عدد_المصلين_نساء) || 0), 0);
-  const totalIftarMeals = records.reduce((sum, r) => sum + (Number(r.عدد_وجبات_الافطار_فعلي) || 0), 0);
-  const totalStudents = records.reduce((sum, r) => sum + (Number(r.عدد_طلاب_الحلقات) || 0) + (Number(r.عدد_طالبات_الحلقات) || 0), 0);
+    const totalWorshippers = records.reduce((sum, r) => {
+    const men = parseInt(String(r.عدد_المصلين_رجال), 10) || 0;
+    const women = parseInt(String(r.عدد_المصلين_نساء), 10) || 0;
+    return sum + men + women;
+  }, 0);
+    const totalIftarMeals = records.reduce((sum, r) => {
+    const meals = parseInt(String(r.عدد_وجبات_الافطار_فعلي), 10) || 0;
+    return sum + meals;
+  }, 0);
+    const totalStudents = records.reduce((sum, r) => {
+    const maleStudents = parseInt(String(r.عدد_طلاب_الحلقات), 10) || 0;
+    const femaleStudents = parseInt(String(r.عدد_طالبات_الحلقات), 10) || 0;
+    return sum + maleStudents + femaleStudents;
+  }, 0);
 
   const handleAiAnalysis = async () => {
     setIsAnalyzing(true);

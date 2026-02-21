@@ -106,7 +106,7 @@ const App: React.FC = () => {
     setEditingRecord(null);
   };
 
-  const approvedRecords = records.filter(r => r.الاعتماد === 'معتمد');
+    const approvedRecords = records.filter(r => r.الاعتماد === 'يعتمد');
 
   if (!isPlatformEntered) {
     return <WelcomePage onEnter={() => setIsPlatformEntered(true)} />;
@@ -140,40 +140,40 @@ const App: React.FC = () => {
         </div>
       )}
 
-      <header className="bg-[#003366] text-white shadow-xl sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 h-24 flex items-center justify-between">
-          <div className="flex items-center gap-5">
-            <div className="bg-white p-2 rounded-xl shadow-lg transform hover:scale-105 transition-transform">
-              <img src="https://next.rajhifoundation.org/files/52c533df-1.png" alt="شعار الراجحي" className="h-12" />
+            <header className="bg-[#003366] text-white shadow-xl sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 py-3 md:h-24 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-4 self-start md:self-center">
+            <div className="bg-white p-1.5 rounded-lg shadow-lg transform hover:scale-105 transition-transform">
+              <img src="https://next.rajhifoundation.org/files/52c533df-1.png" alt="شعار الراجحي" className="h-10" />
             </div>
             <div>
-              <h1 className="font-black text-xl leading-none">رمضان 1447هـ</h1>
-              <p className="text-[10px] text-[#C5A059] uppercase tracking-[0.2em] font-black mt-1">مؤسسة عبدالله بن عبدالعزيز الراجحي الخيرية</p>
+              <h1 className="font-black text-lg leading-none">رمضان 1447هـ</h1>
+              <p className="text-[9px] text-[#C5A059] uppercase tracking-widest font-black mt-1">مؤسسة عبدالله بن عبدالعزيز الراجحي الخيرية</p>
             </div>
           </div>
-          <nav className="flex items-center bg-white/10 rounded-2xl p-1 gap-1 border border-white/5">
-            <button onClick={() => setView('dashboard')} className={`px-4 sm:px-6 py-2 rounded-xl text-sm font-bold transition-all ${view === 'dashboard' ? 'bg-[#0054A6] text-white shadow-lg' : 'text-white/60 hover:text-white hover:bg-white/5'}`}>الرئيسية</button>
-            <button onClick={() => setView('list')} className={`px-4 sm:px-6 py-2 rounded-xl text-sm font-bold transition-all ${view === 'list' ? 'bg-[#0054A6] text-white shadow-lg' : 'text-white/60 hover:text-white hover:bg-white/5'}`}>السجلات</button>
+          <nav className="w-full md:w-auto flex flex-wrap items-center justify-center bg-white/10 rounded-2xl p-1 gap-1 border border-white/5">
+            <button onClick={() => setView('dashboard')} className={`flex-1 md:flex-none px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${view === 'dashboard' ? 'bg-[#0054A6] text-white shadow-lg' : 'text-white/60 hover:text-white hover:bg-white/5'}`}>الرئيسية</button>
+            <button onClick={() => setView('list')} className={`flex-1 md:flex-none px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${view === 'list' ? 'bg-[#0054A6] text-white shadow-lg' : 'text-white/60 hover:text-white hover:bg-white/5'}`}>السجلات</button>
             {isAdmin && (
               <>
                 <button 
                   onClick={() => setView('fast_eval_results')} 
-                  className={`px-4 sm:px-6 py-2 rounded-xl text-sm font-bold transition-all ${view === 'fast_eval_results' ? 'bg-[#C5A059] text-white shadow-lg' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+                  className={`flex-1 md:flex-none px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${view === 'fast_eval_results' ? 'bg-[#C5A059] text-white shadow-lg' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
                 >
                   تقييم الوجبات
                 </button>
                 <button 
                   onClick={() => setView('visit_results')} 
-                  className={`px-4 sm:px-6 py-2 rounded-xl text-sm font-bold transition-all ${view === 'visit_results' ? 'bg-[#C5A059] text-white shadow-lg' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
+                  className={`flex-1 md:flex-none px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${view === 'visit_results' ? 'bg-[#C5A059] text-white shadow-lg' : 'text-white/60 hover:text-white hover:bg-white/5'}`}
                 >
                   تقارير الزيارة
                 </button>
               </>
             )}
             {!isAdmin ? (
-               <button onClick={() => setShowAdminModal(true)} className="px-4 py-2 text-xs font-black bg-[#C5A059] text-[#003366] rounded-xl hover:scale-105 transition-all mr-2">دخول المسؤول</button>
+               <button onClick={() => setShowAdminModal(true)} className="px-3 py-2 text-[10px] font-black bg-[#C5A059] text-[#003366] rounded-xl hover:scale-105 transition-all md:mr-2">دخول المسؤول</button>
             ) : (
-               <button onClick={() => setIsAdmin(false)} className="px-4 py-2 text-xs font-black bg-red-500 text-white rounded-xl hover:scale-105 transition-all mr-2">خروج المسؤول</button>
+               <button onClick={() => setIsAdmin(false)} className="px-3 py-2 text-[10px] font-black bg-red-500 text-white rounded-xl hover:scale-105 transition-all md:mr-2">خروج المسؤول</button>
             )}
           </nav>
         </div>

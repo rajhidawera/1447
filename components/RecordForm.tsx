@@ -156,14 +156,14 @@ const RecordForm: React.FC<any> = ({ initialData, mosques, days, isAdmin, onSave
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-2">
                <label className="text-[10px] font-black text-slate-400 mr-2 uppercase tracking-widest">المسجد / الموقع</label>
-               <select value={selectedMosqueCode} onChange={handleMosqueChange} className="w-full px-6 py-5 bg-slate-50 border-2 border-transparent rounded-2xl font-bold outline-none focus:border-[#0054A6] shadow-inner appearance-none">
+               <select value={selectedMosqueCode} onChange={handleMosqueChange} className="w-full px-4 py-3 bg-slate-50 border-2 border-transparent rounded-lg font-bold outline-none focus:border-[#0054A6] shadow-inner appearance-none">
                  <option value="">اختر من القائمة...</option>
                  {mosques.map(m => <option key={m.mosque_code} value={m.mosque_code}>{m.المسجد}</option>)}
                </select>
             </div>
             <div className="space-y-2">
                <label className="text-[10px] font-black text-slate-400 mr-2 uppercase tracking-widest">كلمة المرور</label>
-               <input type="password" value={enteredPassword} onChange={(e) => setEnteredPassword(e.target.value)} placeholder="••••••••" className="w-full px-6 py-5 bg-slate-50 border-2 border-transparent rounded-2xl font-bold outline-none focus:border-[#0054A6] shadow-inner text-center tracking-widest" />
+               <input type="password" value={enteredPassword} onChange={(e) => setEnteredPassword(e.target.value)} placeholder="••••••••" className="w-full px-4 py-3 bg-slate-50 border-2 border-transparent rounded-lg font-bold outline-none focus:border-[#0054A6] shadow-inner text-center tracking-widest" />
             </div>
           </div>
         </div>
@@ -189,7 +189,7 @@ const RecordForm: React.FC<any> = ({ initialData, mosques, days, isAdmin, onSave
                    }));
                    if (errors.label_day) setErrors(prev => ({ ...prev, label_day: '' }));
                  }} 
-                 className={`px-6 py-4 border-2 rounded-2xl bg-white font-bold outline-none transition-all appearance-none ${errors.label_day ? 'border-red-500 bg-red-50/30' : 'focus:border-[#0054A6]'}`}
+                 className={`px-4 py-3 border-2 rounded-lg bg-white font-bold outline-none transition-all appearance-none ${errors.label_day ? 'border-red-500 bg-red-50/30' : 'focus:border-[#0054A6]'}`} 
                >
                  <option value="">اختر اليوم...</option>
                  {days.map(d => <option key={d.code_day} value={d.code_day}>{d.label}</option>)}
@@ -198,7 +198,7 @@ const RecordForm: React.FC<any> = ({ initialData, mosques, days, isAdmin, onSave
             </div>
             <div className="flex flex-col gap-2">
                <label className="text-[10px] font-black text-slate-400 mr-2 uppercase tracking-widest">التاريخ الهجري</label>
-               <input type="text" value={formData.تاريخ_هجري} readOnly className="px-6 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl text-slate-400 font-bold" />
+               <input type="text" value={formData.تاريخ_هجري} readOnly className="px-4 py-3 bg-slate-50 border-2 border-slate-100 rounded-lg text-slate-400 font-bold" />
             </div>
           </InputGroup>
 
@@ -207,78 +207,78 @@ const RecordForm: React.FC<any> = ({ initialData, mosques, days, isAdmin, onSave
               <>
                 <div className="flex flex-col gap-2">
                   <label className="text-[10px] font-black text-slate-400 mr-2 uppercase tracking-widest">المصلين (رجال)</label>
-                  <input type="text" inputMode="numeric" name="عدد_المصلين_رجال" value={formData.عدد_المصلين_رجال} onChange={handleChange} placeholder="0" className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0054A6]" />
+                  <input type="text" inputMode="numeric" name="عدد_المصلين_رجال" value={formData.عدد_المصلين_رجال} onChange={handleChange} placeholder="0" className="px-4 py-3 border-2 border-slate-100 rounded-lg font-bold outline-none focus:border-[#0054A6]" />
                 </div>
                 <div className="flex flex-col gap-2">
                   <label className="text-[10px] font-black text-slate-400 mr-2 uppercase tracking-widest">المصلين (نساء)</label>
-                  <input type="text" inputMode="numeric" name="عدد_المصلين_نساء" value={formData.عدد_المصلين_نساء} onChange={handleChange} placeholder="0" className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0054A6]" />
+                  <input type="text" inputMode="numeric" name="عدد_المصلين_نساء" value={formData.عدد_المصلين_نساء} onChange={handleChange} placeholder="0" className="px-4 py-3 border-2 border-slate-100 rounded-lg font-bold outline-none focus:border-[#0054A6]" />
                 </div>
               </>
             )}
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-slate-400 mr-2 uppercase tracking-widest">وجبات الإفطار</label>
-              <input type="text" inputMode="numeric" name="عدد_وجبات_الافطار_فعلي" value={formData.عدد_وجبات_الافطار_فعلي} onChange={handleChange} placeholder="0" className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0054A6]" />
+              <input type="text" inputMode="numeric" name="عدد_وجبات_الافطار_فعلي" value={formData.عدد_وجبات_الافطار_فعلي} onChange={handleChange} placeholder="0" className="px-4 py-3 border-2 border-slate-100 rounded-lg font-bold outline-none focus:border-[#0054A6]" />
             </div>
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-slate-400 mr-2 uppercase tracking-widest">كراتين ماء</label>
-              <input type="text" inputMode="numeric" name="عدد_كراتين_ماء" value={formData.عدد_كراتين_ماء} onChange={handleChange} placeholder="0" className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0054A6]" />
+              <input type="text" inputMode="numeric" name="عدد_كراتين_ماء" value={formData.عدد_كراتين_ماء} onChange={handleChange} placeholder="0" className="px-4 py-3 border-2 border-slate-100 rounded-lg font-bold outline-none focus:border-[#0054A6]" />
             </div>
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-slate-400 mr-2 uppercase tracking-widest">مستفيدي الضيافة</label>
-              <input type="text" inputMode="numeric" name="عدد_مستفيدي_الضيافة" value={formData.عدد_مستفيدي_الضيافة} onChange={handleChange} placeholder="0" className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0054A6]" />
+              <input type="text" inputMode="numeric" name="عدد_مستفيدي_الضيافة" value={formData.عدد_مستفيدي_الضيافة} onChange={handleChange} placeholder="0" className="px-4 py-3 border-2 border-slate-100 rounded-lg font-bold outline-none focus:border-[#0054A6]" />
             </div>
           </InputGroup>
 
           <InputGroup title="الحلقات القرآنية" icon="📖">
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-slate-400 mr-2 uppercase tracking-widest">طلاب الحلقات</label>
-              <input type="text" inputMode="numeric" name="عدد_طلاب_الحلقات" value={formData.عدد_طلاب_الحلقات} onChange={handleChange} placeholder="0" className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0054A6]" />
+              <input type="text" inputMode="numeric" name="عدد_طلاب_الحلقات" value={formData.عدد_طلاب_الحلقات} onChange={handleChange} placeholder="0" className="px-4 py-3 border-2 border-slate-100 rounded-lg font-bold outline-none focus:border-[#0054A6]" />
             </div>
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-slate-400 mr-2 uppercase tracking-widest">الأوجه المنجزة (طلاب)</label>
-              <input type="text" inputMode="numeric" name="عدد_الاوجه_طلاب" value={formData.عدد_الاوجه_طلاب} onChange={handleChange} placeholder="0" className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0054A6]" />
+              <input type="text" inputMode="numeric" name="عدد_الاوجه_طلاب" value={formData.عدد_الاوجه_طلاب} onChange={handleChange} placeholder="0" className="px-4 py-3 border-2 border-slate-100 rounded-lg font-bold outline-none focus:border-[#0054A6]" />
             </div>
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-slate-400 mr-2 uppercase tracking-widest">طالبات الحلقات</label>
-              <input type="text" inputMode="numeric" name="عدد_طالبات_الحلقات" value={formData.عدد_طالبات_الحلقات} onChange={handleChange} placeholder="0" className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0054A6]" />
+              <input type="text" inputMode="numeric" name="عدد_طالبات_الحلقات" value={formData.عدد_طالبات_الحلقات} onChange={handleChange} placeholder="0" className="px-4 py-3 border-2 border-slate-100 rounded-lg font-bold outline-none focus:border-[#0054A6]" />
             </div>
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-slate-400 mr-2 uppercase tracking-widest">الأوجه المنجزة (طالبات)</label>
-              <input type="text" inputMode="numeric" name="عدد_الاوجه_طالبات" value={formData.عدد_الاوجه_طالبات} onChange={handleChange} placeholder="0" className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0054A6]" />
+              <input type="text" inputMode="numeric" name="عدد_الاوجه_طالبات" value={formData.عدد_الاوجه_طالبات} onChange={handleChange} placeholder="0" className="px-4 py-3 border-2 border-slate-100 rounded-lg font-bold outline-none focus:border-[#0054A6]" />
             </div>
           </InputGroup>
 
           <InputGroup title="البرامج الدعوية" icon="📢">
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-slate-400 mr-2 uppercase tracking-widest">كلمات رجالية</label>
-              <input type="text" inputMode="numeric" name="عدد_الكلمات_الرجالية" value={formData.عدد_الكلمات_الرجالية} onChange={handleChange} placeholder="0" className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0054A6]" />
+              <input type="text" inputMode="numeric" name="عدد_الكلمات_الرجالية" value={formData.عدد_الكلمات_الرجالية} onChange={handleChange} placeholder="0" className="px-4 py-3 border-2 border-slate-100 rounded-lg font-bold outline-none focus:border-[#0054A6]" />
             </div>
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-slate-400 mr-2 uppercase tracking-widest">كلمات نسائية</label>
-              <input type="text" inputMode="numeric" name="عدد_الكلمات_النسائية" value={formData.عدد_الكلمات_النسائية} onChange={handleChange} placeholder="0" className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0054A6]" />
+              <input type="text" inputMode="numeric" name="عدد_الكلمات_النسائية" value={formData.عدد_الكلمات_النسائية} onChange={handleChange} placeholder="0" className="px-4 py-3 border-2 border-slate-100 rounded-lg font-bold outline-none focus:border-[#0054A6]" />
             </div>
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-slate-400 mr-2 uppercase tracking-widest">مستفيدي الكلمات</label>
-              <input type="text" inputMode="numeric" name="عدد_مستفيدي_الكلمات" value={formData.عدد_مستفيدي_الكلمات} onChange={handleChange} placeholder="0" className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0054A6]" />
+              <input type="text" inputMode="numeric" name="عدد_مستفيدي_الكلمات" value={formData.عدد_مستفيدي_الكلمات} onChange={handleChange} placeholder="0" className="px-4 py-3 border-2 border-slate-100 rounded-lg font-bold outline-none focus:border-[#0054A6]" />
             </div>
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-slate-400 mr-2 uppercase tracking-widest">عدد المسابقات</label>
-              <input type="text" inputMode="numeric" name="عدد_المسابقات" value={formData.عدد_المسابقات} onChange={handleChange} placeholder="0" className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0054A6]" />
+              <input type="text" inputMode="numeric" name="عدد_المسابقات" value={formData.عدد_المسابقات} onChange={handleChange} placeholder="0" className="px-4 py-3 border-2 border-slate-100 rounded-lg font-bold outline-none focus:border-[#0054A6]" />
             </div>
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-slate-400 mr-2 uppercase tracking-widest">أطفال الحضانة</label>
-              <input type="text" inputMode="numeric" name="عدد_اطفال_الحضانة" value={formData.عدد_اطفال_الحضانة} onChange={handleChange} placeholder="0" className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0054A6]" />
+              <input type="text" inputMode="numeric" name="عدد_اطفال_الحضانة" value={formData.عدد_اطفال_الحضانة} onChange={handleChange} placeholder="0" className="px-4 py-3 border-2 border-slate-100 rounded-lg font-bold outline-none focus:border-[#0054A6]" />
             </div>
           </InputGroup>
 
           <InputGroup title="القوى البشرية" icon="👥">
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-slate-400 mr-2 uppercase tracking-widest">عدد المشرفين</label>
-              <input type="text" inputMode="numeric" name="عدد المشرفين" value={formData["عدد المشرفين"]} onChange={handleChange} placeholder="0" className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0054A6]" />
+              <input type="text" inputMode="numeric" name="عدد المشرفين" value={formData["عدد المشرفين"]} onChange={handleChange} placeholder="0" className="px-4 py-3 border-2 border-slate-100 rounded-lg font-bold outline-none focus:border-[#0054A6]" />
             </div>
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-slate-400 mr-2 uppercase tracking-widest">عدد المتطوعين</label>
-              <input type="text" inputMode="numeric" name="عدد_المتطوعين" value={formData.عدد_المتطوعين} onChange={handleChange} placeholder="0" className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0054A6]" />
+              <input type="text" inputMode="numeric" name="عدد_المتطوعين" value={formData.عدد_المتطوعين} onChange={handleChange} placeholder="0" className="px-4 py-3 border-2 border-slate-100 rounded-lg font-bold outline-none focus:border-[#0054A6]" />
             </div>
           </InputGroup>
 
@@ -286,8 +286,8 @@ const RecordForm: React.FC<any> = ({ initialData, mosques, days, isAdmin, onSave
             <div className="col-span-full">
                 <label className="block text-sm font-bold text-slate-600 mb-2">هل هناك برامج مجتمعية؟</label>
                 <div className="flex gap-4">
-                    <button type="button" onClick={() => setHasCommunityPrograms(true)} className={`flex-1 py-3 px-4 rounded-xl font-bold transition-all ${hasCommunityPrograms ? 'bg-[#0054A6] text-white shadow-lg' : 'bg-slate-100 text-slate-600'}`}>نعم</button>
-                    <button type="button" onClick={() => { setHasCommunityPrograms(false); setCommunityPrograms([]); }} className={`flex-1 py-3 px-4 rounded-xl font-bold transition-all ${!hasCommunityPrograms ? 'bg-[#C5A059] text-white shadow-lg' : 'bg-slate-100 text-slate-600'}`}>لا</button>
+                    <button type="button" onClick={() => setHasCommunityPrograms(true)} className={`flex-1 py-2 px-4 rounded-md font-bold transition-all text-sm ${hasCommunityPrograms ? 'bg-[#0054A6] text-white shadow-md' : 'bg-slate-100 text-slate-600'}`}>نعم</button>
+                    <button type="button" onClick={() => { setHasCommunityPrograms(false); setCommunityPrograms([]); }} className={`flex-1 py-2 px-4 rounded-md font-bold transition-all text-sm ${!hasCommunityPrograms ? 'bg-[#C5A059] text-white shadow-md' : 'bg-slate-100 text-slate-600'}`}>لا</button>
                 </div>
             </div>
 
@@ -302,7 +302,7 @@ const RecordForm: React.FC<any> = ({ initialData, mosques, days, isAdmin, onSave
                         min="0"
                         max="15"
                         placeholder="0"
-                        className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0054A6]"
+                        className="px-4 py-3 border-2 border-slate-100 rounded-lg font-bold outline-none focus:border-[#0054A6]"
                       />
                     </div>
                     <div className="flex flex-col gap-2">
@@ -311,11 +311,11 @@ const RecordForm: React.FC<any> = ({ initialData, mosques, days, isAdmin, onSave
                         type="text"
                         value={communityPrograms.reduce((sum, p) => sum + (parseInt(p.beneficiaries, 10) || 0), 0)}
                         readOnly 
-                        className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0054A6] bg-slate-50 text-slate-500"
+                        className="px-4 py-3 border-2 border-slate-100 rounded-lg font-bold outline-none focus:border-[#0054A6] bg-slate-50 text-slate-500"
                       />
                     </div>
 
-                    {communityPrograms.map((program, index) => (
+                                        {communityPrograms.map((program, index) => (
                         <div key={index} className="col-span-full grid grid-cols-1 md:grid-cols-3 gap-4 border-t-2 border-dashed border-slate-200 pt-6 mt-6 animate-in">
                             <h4 className="text-md font-bold text-[#0054A6] col-span-full">البرنامج {index + 1}</h4>
                             <div className="flex flex-col gap-2">
@@ -325,7 +325,7 @@ const RecordForm: React.FC<any> = ({ initialData, mosques, days, isAdmin, onSave
                                 value={program.name} 
                                 onChange={(e) => handleCommunityProgramChange(index, 'name', e.target.value)} 
                                 placeholder="مثال: مصابيح"
-                                className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0054A6]"
+                                className="px-4 py-3 border-2 border-slate-100 rounded-lg font-bold outline-none focus:border-[#0054A6]"
                               />
                             </div>
                             <div className="flex flex-col gap-2">
@@ -335,7 +335,7 @@ const RecordForm: React.FC<any> = ({ initialData, mosques, days, isAdmin, onSave
                                 value={program.description} 
                                 onChange={(e) => handleCommunityProgramChange(index, 'description', e.target.value)} 
                                 placeholder="وصف مختصر للبرنامج"
-                                className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0054A6]"
+                                className="px-4 py-3 border-2 border-slate-100 rounded-lg font-bold outline-none focus:border-[#0054A6]"
                               />
                             </div>
                             <div className="flex flex-col gap-2">
@@ -345,7 +345,7 @@ const RecordForm: React.FC<any> = ({ initialData, mosques, days, isAdmin, onSave
                                 value={program.beneficiaries} 
                                 onChange={(e) => handleCommunityProgramChange(index, 'beneficiaries', e.target.value)} 
                                 placeholder="0"
-                                className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0054A6]"
+                                className="px-4 py-3 border-2 border-slate-100 rounded-lg font-bold outline-none focus:border-[#0054A6]"
                               />
                             </div>
                         </div>
@@ -358,19 +358,19 @@ const RecordForm: React.FC<any> = ({ initialData, mosques, days, isAdmin, onSave
             <InputGroup title="الاعتكاف والسحور" icon="🌙">
               <div className="flex flex-col gap-2">
                 <label className="text-[10px] font-black text-slate-400 mr-2 uppercase tracking-widest">المعتكفين (رجال)</label>
-                <input type="text" inputMode="numeric" name="عدد_المعتكفين_رجال" value={formData.عدد_المعتكفين_رجال} onChange={handleChange} placeholder="0" className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0054A6]" />
+                <input type="text" inputMode="numeric" name="عدد_المعتكفين_رجال" value={formData.عدد_المعتكفين_رجال} onChange={handleChange} placeholder="0" className="px-4 py-3 border-2 border-slate-100 rounded-lg font-bold outline-none focus:border-[#0054A6]" />
               </div>
               <div className="flex flex-col gap-2">
                 <label className="text-[10px] font-black text-slate-400 mr-2 uppercase tracking-widest">وجبات سحور (رجال)</label>
-                <input type="text" inputMode="numeric" name="عدد_وجبات_السحور_رجال" value={formData.عدد_وجبات_السحور_رجال} onChange={handleChange} placeholder="0" className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0054A6]" />
+                <input type="text" inputMode="numeric" name="عدد_وجبات_السحور_رجال" value={formData.عدد_وجبات_السحور_رجال} onChange={handleChange} placeholder="0" className="px-4 py-3 border-2 border-slate-100 rounded-lg font-bold outline-none focus:border-[#0054A6]" />
               </div>
               <div className="flex flex-col gap-2">
                 <label className="text-[10px] font-black text-slate-400 mr-2 uppercase tracking-widest">المعتكفين (نساء)</label>
-                <input type="text" inputMode="numeric" name="عدد_المعتكفين_نساء" value={formData.عدد_المعتكفين_نساء} onChange={handleChange} placeholder="0" className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0054A6]" />
+                <input type="text" inputMode="numeric" name="عدد_المعتكفين_نساء" value={formData.عدد_المعتكفين_نساء} onChange={handleChange} placeholder="0" className="px-4 py-3 border-2 border-slate-100 rounded-lg font-bold outline-none focus:border-[#0054A6]" />
               </div>
               <div className="flex flex-col gap-2">
                 <label className="text-[10px] font-black text-slate-400 mr-2 uppercase tracking-widest">وجبات سحور (نساء)</label>
-                <input type="text" inputMode="numeric" name="عدد_وجبات_السحور_نساء" value={formData.عدد_وجبات_السحور_نساء} onChange={handleChange} placeholder="0" className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0054A6]" />
+                <input type="text" inputMode="numeric" name="عدد_وجبات_السحور_نساء" value={formData.عدد_وجبات_السحور_نساء} onChange={handleChange} placeholder="0" className="px-4 py-3 border-2 border-slate-100 rounded-lg font-bold outline-none focus:border-[#0054A6]" />
               </div>
             </InputGroup>
           )}
@@ -387,7 +387,7 @@ const RecordForm: React.FC<any> = ({ initialData, mosques, days, isAdmin, onSave
                   <select 
                     value={formData.الاعتماد || 'قيد المراجعة'} 
                     onChange={(e) => setFormData(p => ({ ...p, الاعتماد: e.target.value }))}
-                    className={`w-full px-8 py-5 rounded-2xl font-black outline-none border-2 transition-all appearance-none cursor-pointer ${
+                    className={`w-full px-4 py-3 rounded-lg font-black outline-none border-2 transition-all appearance-none cursor-pointer ${
                       formData.الاعتماد === 'يعتمد' ? 'bg-emerald-500 border-emerald-400 text-white' : 
                       formData.الاعتماد === 'مرفوض' ? 'bg-red-500 border-red-400 text-white' : 
                       'bg-white/10 border-white/20 text-white'
@@ -407,7 +407,7 @@ const RecordForm: React.FC<any> = ({ initialData, mosques, days, isAdmin, onSave
                 <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-xl">📝</div>
                 <label className="text-xl font-black text-[#003366] uppercase tracking-widest">ملاحظات ومرئيات إضافية</label>
              </div>
-             <textarea name="ملاحظات" value={formData.ملاحظات} onChange={handleChange} rows={4} className="w-full px-8 py-6 bg-slate-50 rounded-[2rem] outline-none focus:bg-white border-2 border-transparent focus:border-[#0054A6] font-bold text-[#003366] text-lg shadow-inner" placeholder="هل هناك أي تحديات أو قصص نجاح تود مشاركتها؟" />
+             <textarea name="ملاحظات" value={formData.ملاحظات} onChange={handleChange} rows={3} className="w-full px-4 py-3 bg-slate-50 rounded-lg outline-none focus:bg-white border-2 border-transparent focus:border-[#0054A6] font-bold text-[#003366] shadow-inner" placeholder="هل هناك أي تحديات أو قصص نجاح تود مشاركتها؟" />
           </div>
 
           <div className="fixed bottom-10 left-0 right-0 px-4 z-[50] pointer-events-none">
@@ -415,14 +415,14 @@ const RecordForm: React.FC<any> = ({ initialData, mosques, days, isAdmin, onSave
                 <button 
                   type="button"
                   onClick={handleFormSubmit} 
-                  className="pointer-events-auto flex-grow bg-[#0054A6] text-white py-6 rounded-[2.5rem] font-black text-xl shadow-2xl flex items-center justify-center gap-4 active:scale-95 transition-all border-b-4 border-[#003366]"
+                  className="pointer-events-auto flex-grow bg-[#0054A6] text-white py-4 rounded-2xl font-bold text-base shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-all border-b-4 border-[#003366]"
                 >
                   {isAdmin ? '💾 حفظ التعديلات والاعتماد النهائي' : '📤 إرسال التقرير للمراجعة'}
                 </button>
                 <button
                   type="button"
                   onClick={onCancel}
-                  className="pointer-events-auto w-24 bg-slate-100 text-slate-500 py-6 rounded-[2.5rem] font-black text-xl shadow-lg flex items-center justify-center gap-4 active:scale-95 transition-all border-b-4 border-slate-200"
+                  className="pointer-events-auto w-24 bg-slate-100 text-slate-500 py-4 rounded-2xl font-bold text-base shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-all border-b-4 border-slate-200"
                 >
                   إلغاء
                 </button>
