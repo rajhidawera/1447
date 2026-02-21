@@ -1,12 +1,15 @@
 
-import React, { useState } from 'react';
-import { MosqueRecord } from '../types.ts';
+import React, { useState, useMemo } from 'react';
+import { MosqueRecord, MosqueInfo, DayInfo } from '../types.ts';
 
 interface RecordListProps {
   records: MosqueRecord[];
+  mosques: MosqueInfo[];
+  days: DayInfo[];
   isAdmin: boolean;
   onEdit: (record: MosqueRecord) => void;
   onAddNew: () => void;
+  onBulkUpdate: (recordIds: string[], newStatus: 'يعتمد' | 'مرفوض') => void;
 }
 
 const getStatusStyle = (status: string) => {
@@ -19,13 +22,45 @@ const getStatusStyle = (status: string) => {
   }
 };
 
-const RecordList: React.FC<RecordListProps> = ({ records, isAdmin, onEdit, onAddNew }) => {
-  const [searchTerm, setSearchTerm] = useState('');
+const RecordList: React.FC<RecordListProps> = ({ records, mosques, days, isAdmin, onEdit, onAddNew, onBulkUpdate }) => {
+  const [filters, setFilters] = useState({ mosque: '', day: '', status: '' });
+  const [selected, setSelected] = useState<string[]>([]);
 
-  const filteredRecords = records.filter(r => 
-    (r.المسجد || '').toLowerCase().includes(searchTerm.toLowerCase()) || 
-    (r.label_day || '').toLowerCase().includes(searchTerm.toLowerCase())
-  ).sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFilters(prev => ({ ...prev, [name]: value }));
+  };
+
+    const filteredRecords = useMemo(() => {
+    return (records || [])
+      .filter(r => {
+        const mosqueMatch = !filters.mosque || r.mosque_code === filters.mosque;
+        const dayMatch = !filters.day || r.code_day === filters.day;
+        const statusMatch = !filters.status || (r.الاعتماد || 'قيد المراجعة') === filters.status;
+        return mosqueMatch && dayMatch && statusMatch;
+      })
+      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  }, [records, filters]);
+
+  const handleSelect = (recordId: string) => {
+    setSelected(prev => 
+      prev.includes(recordId) ? prev.filter(id => id !== recordId) : [...prev, recordId]
+    );
+  };
+
+  const handleSelectAll = () => {
+    if (selected.length === filteredRecords.length) {
+      setSelected([]);
+    } else {
+      setSelected(filteredRecords.map(r => r.record_id));
+    }
+  };
+
+  const handleBulkAction = (status: 'يعتمد' | 'مرفوض') => {
+    if (selected.length === 0) return;
+    onBulkUpdate(selected, status);
+    setSelected([]);
+  };
 
   return (
     <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 space-y-6 text-right" dir="rtl">
@@ -43,27 +78,42 @@ const RecordList: React.FC<RecordListProps> = ({ records, isAdmin, onEdit, onAdd
           </button>
         </div>
         
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="ابحث عن مسجد أو ليلة..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pr-14 pl-4 py-5 bg-white border-2 border-slate-100 rounded-[1.5rem] shadow-sm outline-none focus:border-[#0054A6] transition-all font-bold text-[#003366]"
-          />
-          <div className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-300">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-          </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <select name="mosque" value={filters.mosque} onChange={handleFilterChange} className="w-full px-4 py-3 bg-white border-2 border-slate-100 rounded-xl font-bold outline-none focus:border-[#0054A6] shadow-sm appearance-none">
+            <option value="">كل المساجد</option>
+            {(mosques || []).map(m => <option key={m.mosque_code} value={m.mosque_code}>{m.المسجد}</option>)}
+          </select>
+          <select name="day" value={filters.day} onChange={handleFilterChange} className="w-full px-4 py-3 bg-white border-2 border-slate-100 rounded-xl font-bold outline-none focus:border-[#0054A6] shadow-sm appearance-none">
+            <option value="">كل الأيام</option>
+            {(days || []).map(d => <option key={d.code_day} value={d.code_day}>{d.label}</option>)}
+          </select>
+          <select name="status" value={filters.status} onChange={handleFilterChange} className="w-full px-4 py-3 bg-white border-2 border-slate-100 rounded-xl font-bold outline-none focus:border-[#0054A6] shadow-sm appearance-none">
+            <option value="">كل الحالات</option>
+            <option value="قيد المراجعة">قيد المراجعة</option>
+            <option value="يعتمد">يعتمد</option>
+            <option value="مرفوض">مرفوض</option>
+          </select>
         </div>
       </div>
+
+            {isAdmin && selected.length > 0 && (
+        <div className="bg-slate-50 p-4 rounded-2xl flex items-center justify-between animate-in fade-in border border-slate-200">
+          <p className="text-sm font-bold text-slate-600">تم تحديد {selected.length} سجلات</p>
+          <div className="flex gap-2">
+            <button onClick={() => handleBulkAction('يعتمد')} className="bg-emerald-500 text-white px-4 py-2 rounded-lg font-bold text-xs">✅ اعتماد المحدد</button>
+            <button onClick={() => handleBulkAction('مرفوض')} className="bg-red-500 text-white px-4 py-2 rounded-lg font-bold text-xs">❌ رفض المحدد</button>
+          </div>
+        </div>
+      )}
 
       <div className="bg-white rounded-[2.5rem] shadow-xl border border-slate-100 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-right border-collapse">
             <thead>
               <tr className="bg-slate-50/80 text-slate-400 text-[10px] font-black uppercase tracking-widest border-b border-slate-100">
+                                <th className="p-4 w-12">
+                  {isAdmin && <input type="checkbox" onChange={handleSelectAll} checked={selected.length === filteredRecords.length && filteredRecords.length > 0} className="rounded border-slate-300" />}
+                </th>
                 <th className="px-8 py-6 text-right">المسجد</th>
                 <th className="px-8 py-6 text-right">اليوم / الليلة</th>
                 <th className="px-8 py-6 text-center">إجمالي المصلين</th>
@@ -73,7 +123,10 @@ const RecordList: React.FC<RecordListProps> = ({ records, isAdmin, onEdit, onAdd
             </thead>
             <tbody className="divide-y divide-slate-50">
               {filteredRecords.length > 0 ? filteredRecords.map((record) => (
-                <tr key={record.record_id} className="hover:bg-slate-50/50 transition-colors group">
+                                                <tr key={record.record_id} className={`transition-colors group ${selected.includes(record.record_id) ? 'bg-[#0054A6]/10' : 'hover:bg-slate-50/50'}`}>
+                  <td className="p-4">
+                    {isAdmin && <input type="checkbox" checked={selected.includes(record.record_id)} onChange={() => handleSelect(record.record_id)} className="rounded border-slate-300" />}
+                  </td>
                   <td className="px-8 py-6">
                     <div className="font-black text-[#003366] text-lg">{record.المسجد}</div>
                     <div className="text-[10px] text-slate-400 font-bold mt-1 uppercase tracking-tight">{record.mosque_code}</div>

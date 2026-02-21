@@ -108,11 +108,45 @@ const App: React.FC = () => {
 
     const approvedRecords = records.filter(r => r.الاعتماد === 'يعتمد');
 
-  const handleBulkUpdate = async (recordIds: string[], newStatus: 'يعتمد' | 'مرفوض') => {
+    const handleDailyReportBulkUpdate = async (recordIds: string[], newStatus: 'يعتمد' | 'مرفوض') => {
     setLoading(true);
     try {
       const promises = recordIds.map(record_id => {
-        const recordToUpdate = maintenanceRecords.find(r => r.record_id === record_id);
+        const recordToUpdate = records.find(r => r.record_id === record_id);
+        if (!recordToUpdate) return Promise.resolve(null);
+
+        const payload = {
+          ...recordToUpdate,
+          sheet: 'daily_mosque_report',
+          الاعتماد: newStatus,
+        };
+        return mosqueApi.save(payload);
+      });
+
+      const results = await Promise.all(promises);
+      const successfulUpdates = results.filter(res => res && res.success).length;
+
+      if (successfulUpdates > 0) {
+        showNotification(`تم تحديث ${successfulUpdates} سجلات بنجاح`, 'success');
+        await fetchData();
+      }
+
+      if (successfulUpdates < recordIds.length) {
+        showNotification('فشل تحديث بعض السجلات', 'error');
+      }
+    } catch (error) {
+      showNotification('حدث خطأ أثناء التحديث المجمع', 'error');
+      console.error("Bulk update error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleMaintenanceBulkUpdate = async (recordIds: string[], newStatus: 'يعتمد' | 'مرفوض') => {
+    setLoading(true);
+    try {
+      const promises = recordIds.map(record_id => {
+                const recordToUpdate = maintenanceRecords.find(r => r.record_id === record_id);
         if (!recordToUpdate) return Promise.resolve(null);
 
         const payload = {
@@ -246,11 +280,14 @@ const App: React.FC = () => {
           />
         )}
         {view === 'list' && (
-          <RecordList 
+                    <RecordList 
             records={records} 
+            mosques={mosquesList}
+            days={daysList}
             isAdmin={isAdmin}
             onEdit={(r) => {setEditingRecord(r); setView('form');}} 
             onAddNew={() => {setEditingRecord(null); setView('form');}} 
+            onBulkUpdate={handleDailyReportBulkUpdate}
           />
         )}
         {view === 'form' && (
@@ -282,7 +319,7 @@ const App: React.FC = () => {
             onEdit={(r) => {setEditingRecord(r); setView('maintenance');}}
             onBack={() => setView('dashboard')}
             onAddNew={() => {setEditingRecord(null); setView('maintenance');}}
-            onBulkUpdate={handleBulkUpdate}
+                        onBulkUpdate={handleMaintenanceBulkUpdate}
           />
         )}
         {view === 'fast_eval' && (
