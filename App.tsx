@@ -108,6 +108,40 @@ const App: React.FC = () => {
 
     const approvedRecords = records.filter(r => r.الاعتماد === 'يعتمد');
 
+  const handleBulkUpdate = async (recordIds: string[], newStatus: 'يعتمد' | 'مرفوض') => {
+    setLoading(true);
+    try {
+      const promises = recordIds.map(record_id => {
+        const recordToUpdate = maintenanceRecords.find(r => r.record_id === record_id);
+        if (!recordToUpdate) return Promise.resolve(null);
+
+        const payload = {
+          ...recordToUpdate,
+          sheet: 'Maintenance_Report',
+          الاعتماد: newStatus,
+        };
+        return mosqueApi.save(payload);
+      });
+
+      const results = await Promise.all(promises);
+      const successfulUpdates = results.filter(res => res && res.success).length;
+
+      if (successfulUpdates > 0) {
+        showNotification(`تم تحديث ${successfulUpdates} سجلات بنجاح`, 'success');
+        await fetchData();
+      }
+
+      if (successfulUpdates < recordIds.length) {
+        showNotification('فشل تحديث بعض السجلات', 'error');
+      }
+    } catch (error) {
+      showNotification('حدث خطأ أثناء التحديث المجمع', 'error');
+      console.error("Bulk update error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (!isPlatformEntered) {
     return <WelcomePage onEnter={() => setIsPlatformEntered(true)} />;
   }
@@ -230,7 +264,7 @@ const App: React.FC = () => {
           />
         )}
         {view === 'maintenance' && (
-          <MaintenanceForm 
+                    <MaintenanceForm 
             initialData={editingRecord}
             mosques={mosquesList} 
             days={daysList} 
@@ -240,12 +274,15 @@ const App: React.FC = () => {
           />
         )}
         {view === 'maintenance_list' && (
-          <MaintenanceDashboard 
+                    <MaintenanceDashboard 
             records={maintenanceRecords}
+            mosques={mosquesList}
+            days={daysList}
             isAdmin={isAdmin}
             onEdit={(r) => {setEditingRecord(r); setView('maintenance');}}
             onBack={() => setView('dashboard')}
             onAddNew={() => {setEditingRecord(null); setView('maintenance');}}
+            onBulkUpdate={handleBulkUpdate}
           />
         )}
         {view === 'fast_eval' && (

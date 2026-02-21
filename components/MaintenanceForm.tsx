@@ -55,9 +55,9 @@ const MaintenanceForm: React.FC<any> = ({ initialData, mosques, days, isAdmin, o
     setEnteredPassword('');
   };
 
-  const handleFormSubmit = () => {
-    if (!formData.اليوم) {
-      setErrors({ اليوم: 'يرجى اختيار اليوم' });
+    const handleFormSubmit = () => {
+    if (!formData.code_day) {
+      setErrors({ code_day: 'يرجى اختيار اليوم' });
       return;
     }
     onSave({ ...formData, sheet: 'Maintenance_Report' });
@@ -75,14 +75,14 @@ const MaintenanceForm: React.FC<any> = ({ initialData, mosques, days, isAdmin, o
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">الموقع / المسجد</label>
-              <select value={selectedMosqueCode} onChange={handleMosqueChange} className="w-full px-6 py-5 bg-slate-50 border-2 border-transparent rounded-2xl outline-none focus:bg-white focus:border-[#003366] font-bold text-[#003366] appearance-none shadow-inner">
+              <select value={selectedMosqueCode} onChange={handleMosqueChange} className="w-full px-4 py-3 bg-slate-50 border-2 border-transparent rounded-lg outline-none focus:bg-white focus:border-[#003366] font-bold text-[#003366] appearance-none shadow-inner">
                 <option value="">اختر المسجد المراد رفع تقريره...</option>
-                {mosques.map(m => <option key={m.mosque_code} value={m.mosque_code}>{m.المسجد}</option>)}
+                                {(mosques || []).map(m => <option key={m.mosque_code} value={m.mosque_code}>{m.المسجد}</option>)}
               </select>
             </div>
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">كلمة المرور</label>
-              <input type="password" value={enteredPassword} onChange={(e) => setEnteredPassword(e.target.value)} placeholder="••••••••" className="w-full px-6 py-5 bg-slate-50 border-2 border-transparent rounded-2xl outline-none focus:bg-white focus:border-[#003366] font-bold tracking-widest shadow-inner" />
+              <input type="password" value={enteredPassword} onChange={(e) => setEnteredPassword(e.target.value)} placeholder="••••••••" className="w-full px-4 py-3 bg-slate-50 border-2 border-transparent rounded-lg outline-none focus:bg-white focus:border-[#003366] font-bold tracking-widest shadow-inner" />
             </div>
           </div>
         </div>
@@ -95,35 +95,44 @@ const MaintenanceForm: React.FC<any> = ({ initialData, mosques, days, isAdmin, o
               <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-1">
                 اليوم <span className="text-red-500">*</span>
               </label>
-              <select 
-                name="اليوم" 
-                value={formData.اليوم} 
-                onChange={handleChange} 
-                className={`px-6 py-4 border-2 rounded-2xl bg-white font-bold outline-none transition-all ${errors.اليوم ? 'border-red-500' : 'focus:border-[#003366]'}`}
+                            <select 
+                name="code_day" 
+                value={formData.code_day} 
+                onChange={(e) => {
+                  const selectedCode = e.target.value;
+                  const day = days.find(d => d.code_day === selectedCode);
+                  setFormData(prev => ({ 
+                    ...prev, 
+                    code_day: selectedCode,
+                    label_day: day?.label || ''
+                  }));
+                  if (errors.code_day) setErrors(prev => ({ ...prev, code_day: '' }));
+                }} 
+                className={`px-4 py-3 border-2 rounded-lg bg-white font-bold outline-none transition-all ${errors.code_day ? 'border-red-500' : 'focus:border-[#003366]'}`} 
               >
                 <option value="">اختر اليوم...</option>
-                {days.map(d => <option key={d.code_day} value={d.label}>{d.label}</option>)}
+                {(days || []).map(d => <option key={d.code_day} value={d.code_day}>{d.label}</option>)}
               </select>
-              {errors.اليوم && <span className="text-red-500 text-[10px] font-bold mr-2">{errors.اليوم}</span>}
+                            {errors.code_day && <span className="text-red-500 text-[10px] font-bold mr-2">{errors.code_day}</span>}
             </div>
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">التاريخ</label>
-              <input type="text" value={new Date(formData.التاريخ).toLocaleDateString('ar-SA')} readOnly className="px-6 py-4 border-2 border-slate-100 rounded-2xl bg-slate-50 font-bold text-slate-400" />
+              <input type="text" value={new Date(formData.التاريخ).toLocaleDateString('ar-SA')} readOnly className="px-4 py-3 border-2 border-slate-100 rounded-lg bg-slate-50 font-bold text-slate-400" />
             </div>
           </InputGroup>
 
           <InputGroup title="إحصائيات الصيانة والنظافة" icon="📊">
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">أعمال النظافة</label>
-              <input type="text" inputMode="numeric" name="أعمال_النظافة_عدد" value={formData.أعمال_النظافة_عدد} onChange={handleChange} className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold" placeholder="أدخل العدد" />
+              <input type="text" inputMode="numeric" name="أعمال_النظافة_عدد" value={formData.أعمال_النظافة_عدد} onChange={handleChange} className="px-4 py-3 border-2 border-slate-100 rounded-lg font-bold" placeholder="أدخل العدد" />
             </div>
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">أعمال الصيانة</label>
-              <input type="text" inputMode="numeric" name="أعمال_الصيانة_عدد" value={formData.أعمال_الصيانة_عدد} onChange={handleChange} className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold" placeholder="أدخل العدد" />
+              <input type="text" inputMode="numeric" name="أعمال_الصيانة_عدد" value={formData.أعمال_الصيانة_عدد} onChange={handleChange} className="px-4 py-3 border-2 border-slate-100 rounded-lg font-bold" placeholder="أدخل العدد" />
             </div>
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">كراتين الماء</label>
-              <input type="text" inputMode="numeric" name="عدد_كراتين_الماء_الواقعي" value={formData.عدد_كراتين_الماء_الواقعي} onChange={handleChange} className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold" placeholder="أدخل العدد" />
+              <input type="text" inputMode="numeric" name="عدد_كراتين_الماء_الواقعي" value={formData.عدد_كراتين_الماء_الواقعي} onChange={handleChange} className="px-4 py-3 border-2 border-slate-100 rounded-lg font-bold" placeholder="أدخل العدد" />
             </div>
           </InputGroup>
 
@@ -139,7 +148,7 @@ const MaintenanceForm: React.FC<any> = ({ initialData, mosques, days, isAdmin, o
                   <select 
                     value={formData.الاعتماد || 'قيد المراجعة'} 
                     onChange={(e) => setFormData(p => ({ ...p, الاعتماد: e.target.value }))}
-                    className={`w-full px-8 py-5 rounded-2xl font-black outline-none border-2 transition-all appearance-none cursor-pointer ${
+                    className={`w-full px-4 py-3 rounded-lg font-black outline-none border-2 transition-all appearance-none cursor-pointer ${
                       formData.الاعتماد === 'يعتمد' ? 'bg-emerald-500 border-emerald-400 text-white' : 
                       formData.الاعتماد === 'مرفوض' ? 'bg-red-500 border-red-400 text-white' : 
                       'bg-white/10 border-white/20 text-white'
@@ -155,8 +164,8 @@ const MaintenanceForm: React.FC<any> = ({ initialData, mosques, days, isAdmin, o
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <textarea name="أعمال_النظافة_سرد" value={formData.أعمال_النظافة_سرد} onChange={handleChange} rows={3} className="w-full px-6 py-4 bg-white border-2 border-slate-100 rounded-3xl font-bold" placeholder="تفاصيل أعمال النظافة..." />
-            <textarea name="أعمال_الصيانة_سرد" value={formData.أعمال_الصيانة_سرد} onChange={handleChange} rows={3} className="w-full px-6 py-4 bg-white border-2 border-slate-100 rounded-3xl font-bold" placeholder="تفاصيل أعمال الصيانة..." />
+            <textarea name="أعمال_النظافة_سرد" value={formData.أعمال_النظافة_سرد} onChange={handleChange} rows={3} className="w-full px-4 py-3 bg-white border-2 border-slate-100 rounded-lg font-bold" placeholder="تفاصيل أعمال النظافة..." />
+            <textarea name="أعمال_الصيانة_سرد" value={formData.أعمال_الصيانة_سرد} onChange={handleChange} rows={3} className="w-full px-4 py-3 bg-white border-2 border-slate-100 rounded-lg font-bold" placeholder="تفاصيل أعمال الصيانة..." />
           </div>
 
           <div className="fixed bottom-10 left-0 right-0 px-4 z-[50] pointer-events-none">
@@ -164,14 +173,14 @@ const MaintenanceForm: React.FC<any> = ({ initialData, mosques, days, isAdmin, o
                 <button 
                   type="button"
                   onClick={handleFormSubmit} 
-                  className="pointer-events-auto flex-grow bg-[#0054A6] text-white py-6 rounded-[2.5rem] font-black text-xl shadow-2xl flex items-center justify-center gap-4 active:scale-95 transition-all border-b-4 border-[#003366]"
+                  className="pointer-events-auto flex-grow bg-[#0054A6] text-white py-4 rounded-2xl font-bold text-base shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-all border-b-4 border-[#003366]"
                 >
                   {isAdmin ? '💾 حفظ التعديلات والاعتماد' : '📥 رفع تقرير الصيانة'}
                 </button>
                 <button
                   type="button"
                   onClick={onCancel}
-                  className="pointer-events-auto w-24 bg-slate-100 text-slate-500 py-6 rounded-[2.5rem] font-black text-xl shadow-lg flex items-center justify-center gap-4 active:scale-95 transition-all border-b-4 border-slate-200"
+                  className="pointer-events-auto w-24 bg-slate-100 text-slate-500 py-4 rounded-2xl font-bold text-base shadow-lg flex items-center justify-center gap-2 active:scale-95 transition-all border-b-4 border-slate-200"
                 >
                   إلغاء
                 </button>
