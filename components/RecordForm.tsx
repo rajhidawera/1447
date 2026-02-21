@@ -25,7 +25,9 @@ const RecordForm: React.FC<any> = ({ initialData, mosques, days, isAdmin, onSave
   const [enteredPassword, setEnteredPassword] = useState('');
   const [isPasswordCorrect, setIsPasswordCorrect] = useState(false);
   const [selectedMosqueCode, setSelectedMosqueCode] = useState('');
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [hasCommunityPrograms, setHasCommunityPrograms] = useState(false);
+  const [communityPrograms, setCommunityPrograms] = useState<{name: string, description: string, beneficiaries: string}[]>([]);
 
   useEffect(() => {
     if (initialData) {
@@ -36,6 +38,56 @@ const RecordForm: React.FC<any> = ({ initialData, mosques, days, isAdmin, onSave
       setFormData({ ...INITIAL_RECORD, record_id: `MRJ-${Date.now()}`, تاريخ_هجري: getTodayHijri() });
     }
   }, [initialData, isAdmin]);
+
+  useEffect(() => {
+    if (initialData?.البرنامج_المجتمعي) {
+      setHasCommunityPrograms(true);
+      const programs = initialData.البرنامج_المجتمعي.split('##').filter(p => p.trim() !== '');
+      setCommunityPrograms(programs.map((p: string) => {
+        const [name = '', beneficiaries = '', description = ''] = p.split('|');
+        return { name, beneficiaries, description };
+      }));
+    } else {
+      setHasCommunityPrograms(false);
+      setCommunityPrograms([]);
+    }
+  }, [initialData]);
+
+  const handleCommunityProgramChange = (index: number, field: 'name' | 'description' | 'beneficiaries', value: string) => {
+    const updatedPrograms = [...communityPrograms];
+    updatedPrograms[index][field] = value;
+    setCommunityPrograms(updatedPrograms);
+  };
+
+  const handleCommunityProgramsCountChange = (countStr: string) => {
+    const count = parseInt(countStr, 10) || 0;
+    if (count >= 0 && count <= 15) { // Limit to 15 programs
+      const newPrograms = Array.from({ length: count }, (_, i) => 
+        communityPrograms[i] || { name: '', description: '', beneficiaries: '' }
+      );
+      setCommunityPrograms(newPrograms);
+    }
+  };
+
+  useEffect(() => {
+    if (!hasCommunityPrograms) {
+      setFormData(prev => ({ ...prev, البرنامج_المجتمعي: '', عدد_المستفيدين: '0', عدد_البرامج_المجتمعية: '0' }));
+      return;
+    }
+
+    const programString = communityPrograms
+      .map(p => `${p.name || ''}|${p.beneficiaries || ''}|${p.description || ''}`)
+      .join('##');
+
+    const totalBeneficiaries = communityPrograms.reduce((sum, p) => sum + (parseInt(p.beneficiaries, 10) || 0), 0);
+
+    setFormData(prev => ({ 
+      ...prev, 
+      البرنامج_المجتمعي: programString,
+      عدد_المستفيدين: String(totalBeneficiaries),
+      عدد_البرامج_المجتمعية: String(communityPrograms.length)
+    }));
+  }, [communityPrograms, hasCommunityPrograms]);
 
   useEffect(() => {
     if (isAdmin) return;
@@ -230,19 +282,76 @@ const RecordForm: React.FC<any> = ({ initialData, mosques, days, isAdmin, onSave
             </div>
           </InputGroup>
 
-          <InputGroup title="البرنامج المجتمعي" icon="🤝">
-            <div className="flex flex-col gap-2 lg:col-span-2">
-              <label className="text-[10px] font-black text-slate-400 mr-2 uppercase tracking-widest">اسم البرنامج</label>
-              <input type="text" name="البرنامج_المجتمعي" value={formData.البرنامج_المجتمعي} onChange={handleChange} placeholder="أدخل اسم البرنامج إن وجد" className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0054A6]" />
+          <InputGroup title="البرامج المجتمعية" icon="🤝">
+            <div className="col-span-full">
+                <label className="block text-sm font-bold text-slate-600 mb-2">هل هناك برامج مجتمعية؟</label>
+                <div className="flex gap-4">
+                    <button type="button" onClick={() => setHasCommunityPrograms(true)} className={`flex-1 py-3 px-4 rounded-xl font-bold transition-all ${hasCommunityPrograms ? 'bg-[#0054A6] text-white shadow-lg' : 'bg-slate-100 text-slate-600'}`}>نعم</button>
+                    <button type="button" onClick={() => { setHasCommunityPrograms(false); setCommunityPrograms([]); }} className={`flex-1 py-3 px-4 rounded-xl font-bold transition-all ${!hasCommunityPrograms ? 'bg-[#C5A059] text-white shadow-lg' : 'bg-slate-100 text-slate-600'}`}>لا</button>
+                </div>
             </div>
-            <div className="flex flex-col gap-2">
-              <label className="text-[10px] font-black text-slate-400 mr-2 uppercase tracking-widest">عدد المستفيدين</label>
-              <input type="text" inputMode="numeric" name="عدد_المستفيدين" value={formData.عدد_المستفيدين} onChange={handleChange} placeholder="0" className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0054A6]" />
-            </div>
-            <div className="flex flex-col gap-2 lg:col-span-3">
-              <label className="text-[10px] font-black text-slate-400 mr-2 uppercase tracking-widest">وصف مختصر للبرنامج</label>
-              <textarea name="وصف_البرنامج" value={formData.وصف_البرنامج} onChange={handleChange} rows={2} className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0054A6] bg-slate-50/50" placeholder="ماذا تم في البرنامج؟" />
-            </div>
+
+            {hasCommunityPrograms && (
+                <div className="col-span-full grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 pt-6 border-t border-slate-200 mt-6">
+                    <div className="flex flex-col gap-2">
+                      <label className="text-[10px] font-black text-slate-400 mr-2 uppercase tracking-widest">كم عدد البرامج المجتمعية المقامة؟</label>
+                      <input 
+                        type="number" 
+                        value={communityPrograms.length}
+                        onChange={(e) => handleCommunityProgramsCountChange(e.target.value)} 
+                        min="0"
+                        max="15"
+                        placeholder="0"
+                        className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0054A6]"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <label className="text-[10px] font-black text-slate-400 mr-2 uppercase tracking-widest">إجمالي عدد المستفيدين</label>
+                      <input 
+                        type="text"
+                        value={communityPrograms.reduce((sum, p) => sum + (parseInt(p.beneficiaries, 10) || 0), 0)}
+                        readOnly 
+                        className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0054A6] bg-slate-50 text-slate-500"
+                      />
+                    </div>
+
+                    {communityPrograms.map((program, index) => (
+                        <div key={index} className="col-span-full grid grid-cols-1 md:grid-cols-3 gap-4 border-t-2 border-dashed border-slate-200 pt-6 mt-6 animate-in">
+                            <h4 className="text-md font-bold text-[#0054A6] col-span-full">البرنامج {index + 1}</h4>
+                            <div className="flex flex-col gap-2">
+                              <label className="text-[10px] font-black text-slate-400 mr-2 uppercase tracking-widest">اسم البرنامج</label>
+                              <input 
+                                type="text"
+                                value={program.name} 
+                                onChange={(e) => handleCommunityProgramChange(index, 'name', e.target.value)} 
+                                placeholder="مثال: مصابيح"
+                                className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0054A6]"
+                              />
+                            </div>
+                            <div className="flex flex-col gap-2">
+                              <label className="text-[10px] font-black text-slate-400 mr-2 uppercase tracking-widest">وصف البرنامج</label>
+                              <input 
+                                type="text"
+                                value={program.description} 
+                                onChange={(e) => handleCommunityProgramChange(index, 'description', e.target.value)} 
+                                placeholder="وصف مختصر للبرنامج"
+                                className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0054A6]"
+                              />
+                            </div>
+                            <div className="flex flex-col gap-2">
+                              <label className="text-[10px] font-black text-slate-400 mr-2 uppercase tracking-widest">عدد المستفيدين</label>
+                              <input 
+                                type="number" 
+                                value={program.beneficiaries} 
+                                onChange={(e) => handleCommunityProgramChange(index, 'beneficiaries', e.target.value)} 
+                                placeholder="0"
+                                className="px-6 py-4 border-2 border-slate-100 rounded-2xl font-bold outline-none focus:border-[#0054A6]"
+                              />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
           </InputGroup>
 
           {showItikafSection && (
